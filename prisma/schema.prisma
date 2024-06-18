@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Clients {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  band_width      String
+  channels        String
+  client_code     String
+  client_name     String
+  client_region   String
+  down_speed      String
+  hd_channels     String
+  includes_movil  String
+  includes_tv     String
+  movil_pack      String
+  other_services  String[]
+  pack_name       String
+  roaming         String
+  roaming_bw      String
+  stream_services String[]
+  tv_pack         String
+  up_speed        String
+}
+
+model Internet_planes {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  down_speed Int
+  name       String
+  up_speed   Int
+
+  @@map("Internet-planes")
+}
+
+model Movil_planes {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  band_width     Int
+  name           String
+  other_services String[]
+  roaming        Boolean
+  roaming_bw     Int
+
+  @@map("Movil-planes")
+}
+
+model Regions {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  available Boolean
+  name      String
+}
+
+model Television_planes {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  channels        Int
+  hd_channels     Int
+  name            String
+  stream_services String[]
+
+  @@map("Television-planes")
+}

@@ -6,23 +6,23 @@ export type WebhookRequest =
     queryResult: 
     {
         queryText: string,
-        languageCode: string,
-        speechRecognitionConfidence: number,
-        action: string,
-        parameters: Object,
+        languageCode?: string,
+        speechRecognitionConfidence?: number,
+        action?: string,
+        parameters?: Object,
         allRequiredParamsPresent: boolean,
-        cancelsSlotFilling: boolean,
-        fulfillmentText: string,
+        cancelsSlotFilling?: boolean,
+        fulfillmentText?: string,
         fulfillmentMessages: [Object],
-        webhookSource: string,
-        webhookPayload: Object,
-        outputContexts: [Object],
+        webhookSource?: string,
+        webhookPayload?: Object,
+        outputContexts?: [Object],
         intent: Object,
         intentDetectionConfidence: number,
-        diagnosticInfo: Object,
-        sentimentAnalysisResult: Object,
+        diagnosticInfo?: Object,
+        sentimentAnalysisResult?: Object,
     },
-    originalDetectIntentRequest: Object
+    originalDetectIntentRequest?: Object
 }
 
 /*
@@ -34,11 +34,11 @@ export type WebhookRequest =
 */
 export type WebhookResponse = 
 {   
-  fulfillmentText: string,
+  fulfillmentText?: string,
   fulfillmentMessages: [Object],
-  source: string,
-  payload: Object,
-  outputContexts: [Object],
-  followupEventInput: Object,
-  sessionEntityTypes: [Object]
+  source?: string,
+  payload?: Object,
+  outputContexts?: [Object],
+  followupEventInput?: Object,
+  sessionEntityTypes?: [Object]
 }

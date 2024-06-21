@@ -5,8 +5,10 @@ import { WebhookRequest, WebhookResponse } from "../private/types";
 
 export async function POST(request: Request) 
 {
+    try{
     const data = await request.json() as WebhookRequest;
     console.log("Data received: \n" + JSON.stringify(data));
+    }catch(){};
 
     const response : WebhookResponse = 
     { 

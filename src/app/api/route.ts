@@ -10,8 +10,8 @@ export async function POST(request: Request)
         const raw_data = await request.json();
         console.log('Raw json received: \n' + JSON.stringify(raw_data));
 
-        const typed_data = await request.json() as WebhookRequest;
-        
+        const typed_data = raw_data as WebhookRequest;
+
         console.log('Typed json received: \n' + JSON.stringify(typed_data));
     }
     catch(e : any)

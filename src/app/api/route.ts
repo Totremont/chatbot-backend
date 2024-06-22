@@ -42,12 +42,16 @@ export async function GET(request: Request)
     console.log('Received a GET request');
     try
     {
-        const raw_data = await request.json();
-        console.log('Raw json received: \n' + JSON.stringify(raw_data));
+        if(request.body)
+        {
+            const raw_data = await request.json();
+            console.log('Raw json received: \n' + JSON.stringify(raw_data));
 
-        const typed_data = raw_data as WebhookRequest;
+            const typed_data = raw_data as WebhookRequest;
 
-        console.log('Typed json received: \n' + JSON.stringify(typed_data));
+            console.log('Typed json received: \n' + JSON.stringify(typed_data));
+        } 
+        else console.log('Request with empty body');
     }
     catch(e : any)
     {

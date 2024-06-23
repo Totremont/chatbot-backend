@@ -7,15 +7,8 @@ import { params} from "./parameters";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
-// @ts-expect-error
-var prisma : PrismaClient = globalThis.prisma ?? setDatabaseClient();
 
-function setDatabaseClient()
-{
-    prisma = new PrismaClient();
-    //Explicit call to deactivate lazy behaviour
-    prisma.$connect;
-}
+const prisma : PrismaClient = new PrismaClient();
 
 // == Global handler ==
 

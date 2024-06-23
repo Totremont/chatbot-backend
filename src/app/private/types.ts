@@ -17,7 +17,7 @@ export type WebhookRequest =
         webhookSource?: string,
         webhookPayload?: Object,
         outputContexts?: [Object],
-        intent: Object,
+        intent: {displayName : string, id : string},
         intentDetectionConfidence: number,
         diagnosticInfo?: Object,
         sentimentAnalysisResult?: Object,

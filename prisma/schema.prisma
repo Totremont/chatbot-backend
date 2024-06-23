@@ -9,29 +9,30 @@ datasource db {
 
 model Clients {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  band_width      String
-  channels        String
+  band_width      Int
+  channels        Int
   client_code     String
   client_name     String
   client_region   String
-  down_speed      String
-  hd_channels     String
-  includes_movil  String
-  includes_tv     String
+  down_speed      Int
+  hd_channels     Int
+  includes_movil  Boolean
+  includes_tv     Boolean
   movil_pack      String
-  other_services  String[]
+  movil_services  String[]
   pack_name       String
-  roaming         String
-  roaming_bw      String
+  price           Int
+  roaming         Boolean
   stream_services String[]
   tv_pack         String
-  up_speed        String
+  up_speed        Int
 }
 
 model Internet_planes {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   down_speed Int
   name       String
+  price      Int
   up_speed   Int
 
   @@map("Internet-planes")
@@ -42,8 +43,8 @@ model Movil_planes {
   band_width     Int
   name           String
   other_services String[]
+  price          Int
   roaming        Boolean
-  roaming_bw     Int
 
   @@map("Movil-planes")
 }
@@ -51,7 +52,7 @@ model Movil_planes {
 model Regions {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   available Boolean
-  name      String
+  name      String  @unique
 }
 
 model Television_planes {
@@ -59,6 +60,7 @@ model Television_planes {
   channels        Int
   hd_channels     Int
   name            String
+  price           Int
   stream_services String[]
 
   @@map("Television-planes")

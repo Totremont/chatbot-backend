@@ -1,0 +1,56 @@
+{
+  "id": "359d3d59-88cd-45dd-bd25-b8f35af2b59b-d2a79bec",
+  "fulfillmentText": "Anotado. ¡Última pregunta!\n\nNos gustaría ofrecerte nuestros servicios de Telefonía Movil.\nSi necesitás estar conectado afuera de tu casa, en cualquier parte de la ciudad, estos planes te resultarán atractivos. ¿Cuál eliges?\n\n- Movil Connect   (5 GB al mes + Whatsapp)\n\n- Movil Hub            (10 GB al mes + Roaming + Whatsapp)\n\n- Movil Link            (20 GB al mes + Roaming + Whatsapp + Llamadas ilimitadas)\n\n- Sin telefonía.",
+  "language_code": "es",
+  "queryText": "TV Plus",
+  "webhookPayload": {},
+  "intentDetectionConfidence": 1,
+  "action": "Plan-contratar.Plan-contratar-custom.Plan-contratar-provincia-custom.Plan-contratar-provincia-usuarios-custom.Plan-contratar-provincia-usuarios-uso-yes",
+  "webhookSource": "",
+  "parameters": {
+    "servicio-tv": "servicio-tv"
+  },
+  "fulfillmentMessages": [
+    {
+      "text": {
+        "text": [
+          "Anotado. ¡Última pregunta!\n\nNos gustaría ofrecerte nuestros servicios de Telefonía Movil.\nSi necesitás estar conectado afuera de tu casa, en cualquier parte de la ciudad, estos planes te resultarán atractivos. ¿Cuál eliges?\n\n- Movil Connect   (5 GB al mes + Whatsapp)\n\n- Movil Hub            (10 GB al mes + Roaming + Whatsapp)\n\n- Movil Link            (20 GB al mes + Roaming + Whatsapp + Llamadas ilimitadas)\n\n- Sin telefonía."
+        ]
+      }
+    }
+  ],
+  "webhookStatus": {
+    "webhookUsed": false
+  },
+  "outputContexts": [
+    {
+      "lifespanCount": 5,
+      "name": "plan-contratar",
+      "parameters": {
+        "servicio-usuarios": "2.0",
+        "provincia": "Santa Fe",
+        "servicio-uso.original": "casual",
+        "servicio-tv": "servicio-tv",
+        "servicio-usuarios.original": "2",
+        "servicio-tv.original": "",
+        "servicio-uso": "Casual",
+        "provincia.original": "Santa Fe"
+      }
+    },
+    {
+      "lifespanCount": 1,
+      "name": "plan-contratar-provincia-usuarios-uso-followup",
+      "parameters": {
+        "servicio-tv": "servicio-tv",
+        "servicio-uso.original": "casual",
+        "servicio-uso": "Casual",
+        "servicio-tv.original": ""
+      }
+    }
+  ],
+  "intent": {
+    "isFallback": false,
+    "displayName": "Plan-contratar - provincia - usuarios - uso - TV",
+    "id": "e7c8789e-2410-4e61-95e4-2b1f02d71eae"
+  }
+}

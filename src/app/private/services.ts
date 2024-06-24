@@ -25,7 +25,7 @@ export async function handleRequest(data : WebhookRequest)
         console.log('HandleRequest ERROR : ' + error);
         error = true;
     }
-    finally{ return {ok : error, response} }
+    finally{ return {ok : !error, response} }
 };
 
 

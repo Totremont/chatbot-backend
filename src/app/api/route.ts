@@ -2,7 +2,7 @@
 //POST request to HOST
 
 import { handleRequest } from "../private/services";
-import { WebhookRequest, WebhookResponse } from "../private/types";
+import { WebhookRequest} from "../private/types";
 
 export async function POST(request: Request) 
 {
@@ -10,7 +10,13 @@ export async function POST(request: Request)
     {
         const typed_data = await request.json() as WebhookRequest;
         const response = await handleRequest(typed_data);
-        return Response.json(response);
+
+        if(response.ok) return Response.json(response.response);
+        else
+        {
+            console.log('Response error: service returned error');
+            return Response.error();
+        }
     }
     catch(e : any)
     {

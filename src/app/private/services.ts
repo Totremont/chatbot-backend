@@ -52,7 +52,10 @@ async function gateway(data : WebhookRequest)
 async function pcpHandler(province_name : string)
 {
     const response = {} as WebhookResponse;
+    console.log('Prisma está instanciado? : ' + !!prisma);
+    console.log('Buscando regiones...\n');
     const region = await prisma.regions.findUnique({where : {name : province_name}});
+    console.log('Resultado: ' + JSON.stringify(region));
 
 
     if(region?.available)

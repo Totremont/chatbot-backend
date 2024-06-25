@@ -1,9 +1,8 @@
-import { Clients, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
-import { getRandomInt, simpleMessage } from "./utils";
+import { simpleMessage } from "./utils";
 import { pca_messages, pcf_messages, pcp_messages } from "./messages";
-import { getRandomValues } from "crypto";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -58,7 +57,7 @@ async function gateway(data : WebhookRequest)
 async function pcpHandler(data : WebhookRequest)
 {
     // @ts-expect-error
-    const province = data.queryResult!.parameters[params.provincia]! as string;
+    const province = data.queryResult!.parameters[Params.provincia.name]! as string;
     const response = {} as WebhookResponse;
     const region = await prisma.regions.findUnique({where : {name : province}});
 

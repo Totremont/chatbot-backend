@@ -1,3 +1,4 @@
+import { WebhookRequest } from "./types";
 
 /*
 {
@@ -19,7 +20,18 @@ export function simpleMessage(message : string)
 
 }
 
-export function getRandomInt(max : number) 
+//"session": "projects/project-id/agent/sessions/session-id"
+
+export function getSession(data : WebhookRequest)
 {
-  return Math.floor(Math.random() * max);
+    const sessionRaw = data.session;
+    //console.log("Session: " + sessionRaw);
+    if(sessionRaw)
+    {
+      const arr = sessionRaw.split('/');
+      const session = arr[arr.length - 1];
+      //console.log("Session ID: " + session);
+      return session;
+    }
+    else throw new Error('Error: Session ID was not found');
 }

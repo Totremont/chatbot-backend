@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
-import { simpleMessage } from "./utils";
+import { getSession, simpleMessage } from "./utils";
 import { pca_messages, pcf_messages, pcp_messages } from "./messages";
 
 // This should create a single instance in most scenarios
@@ -74,7 +74,12 @@ async function pcpHandler(data : WebhookRequest)
 
 async function pcfHandler(data : WebhookRequest)
 {
-    const parameters = data.queryResult.outputContexts?.find(it => it.name === Contexts.plan_contratar.name)?.parameters;
+    const session = getSession(data);
+    const parameters = data.queryResult.outputContexts?.find
+    (
+        it => it.name === Contexts.plan_contratar(session).name
+    )?.parameters;
+
     let response = {} as WebhookResponse;
     if(parameters)
     {
@@ -117,8 +122,13 @@ async function pcfHandler(data : WebhookRequest)
 //Procesar pedido del cliente
 async function pcaHandler(data : WebhookRequest)
 {
+    const session = getSession(data);
+    const parameters = data.queryResult.outputContexts?.find
+    (
+        it => it.name === Contexts.plan_contratar(session).name
+    )?.parameters;
+
     let response = {} as WebhookResponse;
-    const parameters = data.queryResult.outputContexts?.find(it => it.name === Contexts.plan_contratar.name)?.parameters;
     if(parameters)
     {
         const users = parameters[Params.servicio_usuarios.name as keyof {}] as number ?? 0;

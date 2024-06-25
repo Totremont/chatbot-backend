@@ -19,7 +19,14 @@ export const Params =
 
 export const Contexts = 
 {
-    plan_contratar : {name : 'projects/chatbot-production-426720/agent/sessions/d97fb4b6-64c8-3461-5696-972d7b09ca07/contexts/plan-contratar'}
+    plan_contratar(session : string) 
+    {
+        const object = {
+        name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/plan-contratar`,
+        friendly: 'plan-contratar'
+        }
+        return object
+    }
 } 
 
 export const Events = 

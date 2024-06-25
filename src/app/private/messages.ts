@@ -3,18 +3,18 @@ import { Internet_planes, Movil_planes, Television_planes } from "@prisma/client
 export const pcp_messages = 
 {
     success : (province_name : string) => 
-    `
-        Afortunadamente, nuestros servicios están disponibles en ${province_name}.
+`
+Afortunadamente, nuestros servicios están disponibles en ${province_name}.
 
-        ¿Cuántas personas se conectarán a la red habitualmente?
-    `,
+¿Cuántas personas se conectarán a la red habitualmente?
+`,
     
     fail : (province_name : string) => 
-    `
-        Lamentamos informarte que nuestros servicios no están disponibles en ${province_name}.
+`
+Lamentamos informarte que nuestros servicios no están disponibles en ${province_name}.
 
-        Siento no poder serte de ayuda :(
-    `
+Siento no poder serte de ayuda :(
+`
 }
 
 export const pcf_messages = 
@@ -31,27 +31,27 @@ export const pcf_messages =
         const price_movil = pack.movil?.price ?? 0;
         const final_price = price_internet + price_tv + price_movil;
         const text =
-        `
-        ¡Todo listo!
-        Encontré el plan perfecto para vos según tus necesidades:
+`
+¡Todo listo!
+Encontré el plan perfecto para vos según tus necesidades:
 
-        - Uso: ${userType}
-        - Usuarios: ${users}
-        
-        Además agregué los servicios extras que hayas solicitado.
-        Verás el plan a continuación.
+- Uso: ${userType}
+- Usuarios: ${users}
 
-        *${pack.internet.name}*
-        - Bajada : ${pack.internet.downstream} Mb/s
-        - Subida : ${pack.internet.upstream} Mb/s
-        - Precio : $ ${pack.internet.price}
-        ${this.setTvPackMessage(pack.tv)}
-        ${this.setMovilPackMessage(pack.movil)}
+Además agregué los servicios extras que hayas solicitado.
+Verás el plan a continuación.
 
-        Precio final : $ ${final_price}
+* ${pack.internet.name} *
+- Bajada : ${pack.internet.downstream} Mb/s
+- Subida : ${pack.internet.upstream} Mb/s
+- Precio : $ ${pack.internet.price}
+${this.setTvPackMessage(pack.tv)}
+${this.setMovilPackMessage(pack.movil)}
 
-        ¿Te gustaria contratarlo?
-        `
+Precio final : $ ${final_price}
+
+¿Te gustaria contratarlo?
+`
         return text;
     },
     
@@ -61,14 +61,14 @@ export const pcf_messages =
         if(pack)
         {
             text =  
-            `
-            *${pack.name}*
-            - Datos : ${pack.data} GB
-            - Velocidad : ${pack.generations}
-            - Con Roaming? : ${pack.roaming ? 'SI' : 'NO'}
-            - Extras : ${pack.extras[0]}
-            - Precio : $ ${pack.price}
-            `
+`
+* ${pack.name} *
+- Datos : ${pack.data} GB
+- Velocidad : ${pack.generations}
+- Con Roaming? : ${pack.roaming ? 'SI' : 'NO'}
+- Extras : ${pack.extras[0]}
+- Precio : $ ${pack.price}
+`
         }
         return text;
     } 
@@ -79,14 +79,14 @@ export const pcf_messages =
         if(pack)
         {  
             text =
-            `
-            *${pack.name}*
-            - Canales : ${pack.channels}
-            - Canales FHD : ${pack.fhd_channels}
-            - Canales UHD : ${pack.uhd_channels_}
-            - Extras : ${pack.extras[0]}
-            - Precio : $ ${pack.price}
-            `
+`
+* ${pack.name} *
+- Canales : ${pack.channels}
+- Canales FHD : ${pack.fhd_channels}
+- Canales UHD : ${pack.uhd_channels_}
+- Extras : ${pack.extras[0]}
+- Precio : $ ${pack.price}
+`
         }
         return text;
     } 
@@ -95,19 +95,19 @@ export const pcf_messages =
 export const pca_messages = 
 {
     success : (client_code : string) => 
-    `
-        ¡Felicidades! Ya eres usuario de Bit-Stream
-        El siguiente es tu código de cliente. Es importante que lo guardes.
+`
+¡Felicidades! Ya eres usuario de Bit-Stream
+El siguiente es tu código de cliente. Es importante que lo guardes.
 
-        ${client_code}
+${client_code}
 
-        Con este código podrás luego comprobar tu plan o cancelarlo.
-        ¡Que disfrutes de tu plan!
+Con este código podrás luego comprobar tu plan o cancelarlo.
+¡Que disfrutes de tu plan!
 
-    `,
+`,
     
     fail : () => 
-    `
-        Lamento informarte que ocurrió un error y no pude procesar tu pedido. Lo siento.
-    `
+`
+Lamento informarte que ocurrió un error y no pude procesar tu pedido. Lo siento.
+`
 }

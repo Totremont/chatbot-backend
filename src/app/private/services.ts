@@ -203,11 +203,13 @@ async function pcaHandler(data : WebhookRequest)
         );
 
         response.fulfillmentMessages = simpleMessage(pca_messages.success(client.id));
+        /* No funciona como esperaba
         response.followupEventInput = 
         {
             name : Events.conversation_end.name,
             languageCode : 'es'
         }
+        */
         return response;
     }
     else throw new Error('PCA: Parameters are null');

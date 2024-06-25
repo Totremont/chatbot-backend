@@ -1,56 +1,55 @@
 {
-  "id": "359d3d59-88cd-45dd-bd25-b8f35af2b59b-d2a79bec",
-  "fulfillmentText": "Anotado. ¡Última pregunta!\n\nNos gustaría ofrecerte nuestros servicios de Telefonía Movil.\nSi necesitás estar conectado afuera de tu casa, en cualquier parte de la ciudad, estos planes te resultarán atractivos. ¿Cuál eliges?\n\n- Movil Connect   (5 GB al mes + Whatsapp)\n\n- Movil Hub            (10 GB al mes + Roaming + Whatsapp)\n\n- Movil Link            (20 GB al mes + Roaming + Whatsapp + Llamadas ilimitadas)\n\n- Sin telefonía.",
-  "language_code": "es",
-  "queryText": "TV Plus",
-  "webhookPayload": {},
-  "intentDetectionConfidence": 1,
-  "action": "Plan-contratar.Plan-contratar-custom.Plan-contratar-provincia-custom.Plan-contratar-provincia-usuarios-custom.Plan-contratar-provincia-usuarios-uso-yes",
-  "webhookSource": "",
-  "parameters": {
-    "servicio-tv": "servicio-tv"
-  },
-  "fulfillmentMessages": [
-    {
-      "text": {
-        "text": [
-          "Anotado. ¡Última pregunta!\n\nNos gustaría ofrecerte nuestros servicios de Telefonía Movil.\nSi necesitás estar conectado afuera de tu casa, en cualquier parte de la ciudad, estos planes te resultarán atractivos. ¿Cuál eliges?\n\n- Movil Connect   (5 GB al mes + Whatsapp)\n\n- Movil Hub            (10 GB al mes + Roaming + Whatsapp)\n\n- Movil Link            (20 GB al mes + Roaming + Whatsapp + Llamadas ilimitadas)\n\n- Sin telefonía."
-        ]
-      }
-    }
-  ],
-  "webhookStatus": {
-    "webhookUsed": false
-  },
-  "outputContexts": [
-    {
-      "lifespanCount": 5,
-      "name": "plan-contratar",
-      "parameters": {
-        "servicio-usuarios": "2.0",
-        "provincia": "Santa Fe",
-        "servicio-uso.original": "casual",
-        "servicio-tv": "servicio-tv",
-        "servicio-usuarios.original": "2",
-        "servicio-tv.original": "",
-        "servicio-uso": "Casual",
-        "provincia.original": "Santa Fe"
-      }
+  "responseId": "cc851b92-6a16-42aa-b6f1-49f48be872d5-d2a79bec",
+  "queryResult": {
+    "queryText": "movil link",
+    "action": "Plan-contratar.Plan-contratar-custom.Plan-contratar-provincia-custom.Plan-contratar-provincia-usuarios-custom.Plan-contratar-provincia-usuarios-uso-yes.Plan-contratar-provincia-usuarios-uso-TV-selectnumber",
+    "parameters": {
+      "servicio-movil": "Movil Link"
     },
-    {
-      "lifespanCount": 1,
-      "name": "plan-contratar-provincia-usuarios-uso-followup",
-      "parameters": {
-        "servicio-tv": "servicio-tv",
-        "servicio-uso.original": "casual",
-        "servicio-uso": "Casual",
-        "servicio-tv.original": ""
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "¡Todo listo!\n\nHe terminado de armar un plan ideal para vos. \nLo verás a continuación.\n\n¿Estás de acuerdo?",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "¡Todo listo!\n\nHe terminado de armar un plan ideal para vos. \nLo verás a continuación.\n\n¿Estás de acuerdo?"
+          ]
+        }
       }
-    }
-  ],
-  "intent": {
-    "isFallback": false,
-    "displayName": "Plan-contratar - provincia - usuarios - uso - TV",
-    "id": "e7c8789e-2410-4e61-95e4-2b1f02d71eae"
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/chatbot-production-426720/agent/sessions/d97fb4b6-64c8-3461-5696-972d7b09ca07/contexts/plan-contratar",
+        "lifespanCount": 5,
+        "parameters": {
+          "servicio-uso": "Casual",
+          "servicio-movil.original": "movil link",
+          "servicio-tv.original": "",
+          "servicio-movil": "Movil Link",
+          "servicio-usuarios.original": "1",
+          "servicio-tv": "TV Plus",
+          "servicio-usuarios": 1,
+          "provincia.original": "Santa Fe",
+          "provincia": "Santa Fe",
+          "servicio-uso.original": "casual"
+        }
+      },
+      {
+        "name": "projects/chatbot-production-426720/agent/sessions/d97fb4b6-64c8-3461-5696-972d7b09ca07/contexts/plan-contratar-provincia-usuarios-uso-tv-followup",
+        "lifespanCount": 1,
+        "parameters": {
+          "servicio-tv": "servicio-tv",
+          "servicio-movil.original": "movil link",
+          "servicio-tv.original": "",
+          "servicio-movil": "Movil Link"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/chatbot-production-426720/agent/intents/2d6065e3-ca6d-495d-9854-b4f383bdccb0",
+      "displayName": "Plan-contratar - provincia - usuarios - uso - TV - Movil"
+    },
+    "intentDetectionConfidence": 1,
+    "languageCode": "es"
   }
 }

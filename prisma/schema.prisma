@@ -8,43 +8,47 @@ datasource db {
 }
 
 model Clients {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  band_width      Int
-  channels        Int
-  client_code     String
-  client_name     String
-  client_region   String
-  down_speed      Int
-  hd_channels     Int
-  includes_movil  Boolean
-  includes_tv     Boolean
-  movil_pack      String
-  movil_services  String[]
-  pack_name       String
-  price           Int
-  roaming         Boolean
-  stream_services String[]
-  tv_pack         String
-  up_speed        Int
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  channels       Int
+  client_code    String
+  client_name    String
+  client_region  String
+  downstream     Int
+  full_pack      String
+  hd_channels    Int
+  includes_movil Boolean
+  includes_tv    Boolean
+  internet_pack  String
+  movil_data     Int
+  movil_extras   String[]
+  movil_gens     String
+  movil_pack     String
+  roaming        Boolean
+  total_price    Int
+  tv_extras      String[]
+  tv_pack        String
+  uhd_channels   Int
+  upstream       Int
 }
 
 model Internet_planes {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
-  down_speed Int
-  name       String
+  downstream Int
+  name       String @unique
   price      Int
-  up_speed   Int
+  upstream   Int
 
   @@map("Internet-planes")
 }
 
 model Movil_planes {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  band_width     Int
-  name           String
-  other_services String[]
-  price          Int
-  roaming        Boolean
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  data        Int
+  extras      String[]
+  generations String
+  name        String  @unique
+  price       Int
+  roaming     Boolean
 
   @@map("Movil-planes")
 }
@@ -56,12 +60,13 @@ model Regions {
 }
 
 model Television_planes {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  channels        Int
-  hd_channels     Int
-  name            String
-  price           Int
-  stream_services String[]
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  channels      Int
+  extras        String[]
+  fhd_channels  Int
+  name          String   @unique
+  price         Int
+  uhd_channels_ Int      @map("uhd_channels:")
 
   @@map("Television-planes")
 }

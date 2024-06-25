@@ -16,7 +16,7 @@ export type WebhookRequest =
         fulfillmentMessages: [Object],
         webhookSource?: string,
         webhookPayload?: Object,
-        outputContexts?: [Object],
+        outputContexts?: [{name : string, lifespanCount : number, parameters : {}}],
         intent: {displayName : string, id : string},
         intentDetectionConfidence: number,
         diagnosticInfo?: Object,

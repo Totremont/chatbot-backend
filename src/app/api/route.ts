@@ -11,7 +11,7 @@ export async function POST(request: Request)
         const typed_data = await request.json() as WebhookRequest;
         const response = await handleRequest(typed_data);
 
-        if(response.ok) return Response.json(response.response);
+        if(response?.ok) return Response.json(response.response);
         else
         {
             console.log('Response error: service returned error');

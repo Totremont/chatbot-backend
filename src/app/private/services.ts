@@ -2,7 +2,7 @@ import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { getSession, simpleMessage } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -55,6 +55,9 @@ async function gateway(data : WebhookRequest)
             break;
         case Intents.plan_cancelar_modificar.display:
             response = await pcmHandler(data);
+            break;
+        case Intents.plan_modificar_final.display:
+            response = await pmfHandler(data);
             break;
         case Intents.plan_consultar.display:
         case Intents.plan_consultar_codigo.display:
@@ -292,23 +295,83 @@ async function pcmHandler(data : WebhookRequest)
     if(code)
     {
         const client = await prisma.clients.findUnique({where : {id : code}});
-        if(client)
-        {
-            response.followupEventInput = 
-            {
-                name : Events.plan_modificar.name,
-                parameters : 
-                {
-                    'servicio-codigo' : code
-                },
-                languageCode : 'es'
-            }
-        }
+        if(client) response.fulfillmentMessages = simpleMessage(pcm_messages.success());     
         else response.fulfillmentMessages = simpleMessage(pcm_messages.invalidCode());
 
         return response;
     }
     else throw new Error('PCM: No user code was found');
+}
+
+async function pmfHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const session = getSession(data);
+    const out_parameters = data.queryResult.outputContexts?.find
+    (
+        it => it.name === Contexts.plan_modificar(session).name
+    )?.parameters;
+    
+    const code = out_parameters?.[Params.servicio_codigo.name] as string;
+
+    if(data.queryResult.parameters && code)
+    {
+        const internet_pack = data.queryResult.parameters?.[Params.servicio_internet.name] as string;
+        const tv_pack = data.queryResult.parameters?.[Params.servicio_tv.name] as string;
+        const movil_pack = data.queryResult.parameters?.[Params.servicio_movil.name] as string;
+
+        const pack = {internet : internet_pack, tv : tv_pack, movil : movil_pack}
+
+        const values = await Promise.all(
+        [
+            prisma.internet_planes.findUnique({where : {name : pack.internet}}),
+            prisma.television_planes.findUnique({where : {name : pack.tv}}),
+            prisma.movil_planes.findUnique({where : {name : pack.movil}})
+        ]);
+
+        const chosen_packs = {internet : values[0]!, tv : values[1], movil : values[2]};
+
+        const price_internet = chosen_packs.internet.price;
+        const price_tv = chosen_packs.tv?.price ?? 0;
+        const price_movil = chosen_packs.movil?.price ?? 0;
+        const final_price = price_internet + price_tv + price_movil;
+
+        const full_pack = 
+        `${chosen_packs.internet.name} ${chosen_packs.tv?.name ?? ''} ${chosen_packs.movil?.name ?? ''}`;
+
+        const client = await prisma.clients.update
+        (
+            {
+                where : {id : code},
+                data:
+                {
+                    includes_tv : !!chosen_packs.tv,
+                    tv_pack : chosen_packs.tv?.name ?? '',
+                    channels : chosen_packs.tv?.channels ?? 0,
+                    hd_channels : chosen_packs.tv?.fhd_channels ?? 0,
+                    includes_movil : !!chosen_packs.movil,
+                    movil_pack : chosen_packs.movil?.name ?? '',
+                    roaming : chosen_packs.movil?.roaming ?? false,
+                    downstream : chosen_packs.internet.downstream,
+                    internet_pack : chosen_packs.internet.name,
+                    movil_data : chosen_packs.movil?.data ?? 0,
+                    movil_extras : chosen_packs.movil?.extras ?? [''],
+                    movil_gens : chosen_packs.movil?.generations ?? '',
+                    total_price : final_price,
+                    tv_extras : chosen_packs.tv?.extras ?? [''],
+                    uhd_channels : chosen_packs.tv?.uhd_channels_ ?? 0,
+                    upstream : chosen_packs.internet.upstream,
+                    full_pack : full_pack
+                }
+            }
+        );
+
+        response.fulfillmentMessages = simpleMessage(pmf_messages.success());
+
+        return response;
+    }
+    else throw new Error('PMF: Parameters are null');
+
 }
 
 

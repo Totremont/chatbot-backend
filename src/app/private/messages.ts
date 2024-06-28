@@ -193,5 +193,29 @@ export const pcm_messages =
     invalidCode()
     {
         return 'El código que ingresaste no pertenece a ningún cliente. Corrobora tu código para continuar.';
+    },
+
+    success()
+    {
+        const text =
+`
+De acuerdo.
+A continuación, necesito que me anotes los servicios que va a tener tu nuevo plan.
+Por ejemplo:
+
+ - Internet Dual, TV Plus, Movil Connect 
+
+Podés omitir los planes que no quieras.
+`
+    return text;
     }
+}
+
+export const pmf_messages = 
+{
+    success()
+    {
+        return '¡Listo! He modificado tu plan satisfactoriamente. :)'
+    }
+
 }

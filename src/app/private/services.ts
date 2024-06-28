@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { getSession, simpleMessage } from "./utils";
-import { pca_messages, pcf_messages, pcp_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -46,6 +46,20 @@ async function gateway(data : WebhookRequest)
         case Intents.plan_contratar_affirmative.display:
             response = await pcaHandler(data);
             break;
+        case Intents.cobertura_conocer.display:
+        case Intents.cobertura_conocer_province.display:
+            response = await ccHandler(data);
+            break;
+        case Intents.plan_cancelar.display:
+            response = await pbccHandler(data);
+            break;
+        case Intents.plan_cancelar_modificar.display:
+            response = await pcmHandler(data);
+            break;
+        case Intents.plan_consultar.display:
+        case Intents.plan_consultar_codigo.display:
+            response = await pcHandler(data);
+            break;
         
         default:
             throw new Error('Gateway ERROR : Matching Intent was not found');
@@ -56,17 +70,16 @@ async function gateway(data : WebhookRequest)
 
 async function pcpHandler(data : WebhookRequest)
 {
-    // @ts-expect-error
-    const province = data.queryResult!.parameters[Params.provincia.name]! as string;
+    const province = data.queryResult.parameters?.[Params.provincia.name] as string;
     const response = {} as WebhookResponse;
-    const region = await prisma.regions.findUnique({where : {name : province}});
 
-
-    if(region?.available)
+    if(province)
     {
-        response.fulfillmentMessages = simpleMessage(pcp_messages.success(province));
+        const region = await prisma.regions.findUnique({where : {name : province}});
+        if(region?.available) response.fulfillmentMessages = simpleMessage(pcp_messages.success(province));     
+        else response.fulfillmentMessages = simpleMessage(pcp_messages.fail(province));
     }
-    else response.fulfillmentMessages = simpleMessage(pcp_messages.fail(province));
+    else throw new Error('PCP: Parameter is null');
 
     return response;
 
@@ -83,10 +96,10 @@ async function pcfHandler(data : WebhookRequest)
     let response = {} as WebhookResponse;
     if(parameters)
     {
-        const users = parameters[Params.servicio_usuarios.name as keyof {}] as number ?? 0;
-        const service = parameters[Params.servicio_uso.name as keyof {}] as string ?? '';
-        const tv_pack = parameters[Params.servicio_tv.name as keyof {}] as string ?? '';
-        const movil_pack = parameters[Params.servicio_movil.name as keyof {}]as string ?? '';
+        const users = parameters?.[Params.servicio_usuarios.name] as number;
+        const service = parameters?.[Params.servicio_uso.name] as string;
+        const tv_pack = parameters?.[Params.servicio_tv.name] as string;
+        const movil_pack = parameters?.[Params.servicio_movil.name]as string;
 
         const pack = {internet : '', tv : tv_pack, movil : movil_pack}
 
@@ -131,11 +144,11 @@ async function pcaHandler(data : WebhookRequest)
     let response = {} as WebhookResponse;
     if(parameters)
     {
-        const users = parameters[Params.servicio_usuarios.name as keyof {}] as number ?? 0;
-        const service = parameters[Params.servicio_uso.name as keyof {}] as string ?? '';
-        const tv_pack = parameters[Params.servicio_tv.name as keyof {}] as string ?? '';
-        const movil_pack = parameters[Params.servicio_movil.name as keyof {}] as string ?? '';
-        const province = parameters[Params.provincia.name as keyof {}] as string ?? '';
+        const users = parameters?.[Params.servicio_usuarios.name] as number;
+        const service = parameters?.[Params.servicio_uso.name] as string;
+        const tv_pack = parameters?.[Params.servicio_tv.name] as string;
+        const movil_pack = parameters?.[Params.servicio_movil.name] as string;
+        const province = parameters?.[Params.provincia.name] as string;
 
 
         const pack = {internet : '', tv : tv_pack, movil : movil_pack}
@@ -214,6 +227,88 @@ async function pcaHandler(data : WebhookRequest)
     }
     else throw new Error('PCA: Parameters are null');
 
+}
+
+async function ccHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const province = data.queryResult.parameters?.[Params.provincia.name] as string;
+    if(province)
+    {
+        const region = await prisma.regions.findUnique({where : {name : province}});
+        if(region?.available) response.fulfillmentMessages = simpleMessage(cc_messages.success(province));
+        else response.fulfillmentMessages =  simpleMessage(cc_messages.fail(province));
+    }
+    else response.fulfillmentMessages =  simpleMessage(cc_messages.waitForAnswer());
+
+    return response;
+}
+
+async function pbccHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const code = data.queryResult.parameters?.[Params.servicio_codigo.name] as string;
+    if(code)
+    {
+        const result = await prisma.clients.delete({where : {id : code}});
+        if(result) response.fulfillmentMessages = simpleMessage(pbcc_messages.success());
+        else response.fulfillmentMessages =  simpleMessage(pbcc_messages.invalidCode());
+    }
+    else throw new Error('PBCC: No user code was provided or found');
+
+    return response;
+}
+
+async function pcHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const code = data.queryResult.parameters?.[Params.servicio_codigo.name] as string;
+    if(code)
+    {
+        const client = await prisma.clients.findUnique({where : {id : code}});
+        if(client)
+        {
+            const values = await Promise.all(
+                [
+                    prisma.internet_planes.findUnique({where : {name : client.internet_pack}}),
+                    prisma.television_planes.findUnique({where : {name : client.tv_pack}}),
+                    prisma.movil_planes.findUnique({where : {name : client.movil_pack}})
+                ]
+            );
+            const pack = {internet : values[0]!, tv : values[1], movil : values[2] };
+            response.fulfillmentMessages = simpleMessage(pc_messages.success(pack));
+        }
+        else response.fulfillmentMessages =  simpleMessage(pc_messages.invalidCode());
+    }
+    else response.fulfillmentMessages =  simpleMessage(pc_messages.waitForAnswer());
+
+    return response;
+}
+
+async function pcmHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const code = data.queryResult.parameters?.[Params.servicio_codigo.name] as string;
+    if(code)
+    {
+        const client = await prisma.clients.findUnique({where : {id : code}});
+        if(client)
+        {
+            response.followupEventInput = 
+            {
+                name : Events.plan_modificar.name,
+                parameters : 
+                {
+                    'servicio-codigo' : code
+                },
+                languageCode : 'es'
+            }
+        }
+        else response.fulfillmentMessages = simpleMessage(pcm_messages.invalidCode());
+
+        return response;
+    }
+    else throw new Error('PCM: No user code was found');
 }
 
 

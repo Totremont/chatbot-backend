@@ -9,14 +9,14 @@ export type WebhookRequest =
         languageCode?: string,
         speechRecognitionConfidence?: number,
         action?: string,
-        parameters?: Object,
+        parameters?: Parameters,
         allRequiredParamsPresent: boolean,
         cancelsSlotFilling?: boolean,
         fulfillmentText?: string,
         fulfillmentMessages: [Object],
         webhookSource?: string,
         webhookPayload?: Object,
-        outputContexts?: [{name : string, lifespanCount : number, parameters : {}}],
+        outputContexts?: [{name : string, lifespanCount : number, parameters : Parameters}],
         intent: {displayName : string, id : string},
         intentDetectionConfidence: number,
         diagnosticInfo?: Object,
@@ -39,6 +39,8 @@ export type WebhookResponse =
   source?: string,
   payload?: Object,
   outputContexts?: [Object],
-  followupEventInput?: Object,
+  followupEventInput?: {name : string, parameters : Parameters, languageCode : string},
   sessionEntityTypes?: [Object]
 }
+
+type Parameters = {[key : string] : string | number}

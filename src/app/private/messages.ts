@@ -111,3 +111,87 @@ Con este código podrás luego comprobar tu plan o cancelarlo.
 Lamento informarte que ocurrió un error y no pude procesar tu pedido. Lo siento.
 `
 }
+
+export const cc_messages = 
+{
+    success : (province_name : string) => 
+`
+¡Estás de suerte porque nuestros servicios están disponibles en ${province_name}!
+
+Recordá que a la hora de buscar un plan, puedo ayudarte a contratar el que más te convenga.
+`,
+    
+    fail : (province_name : string) => 
+`
+Lamentamos informarte que nuestros servicios no están disponibles en ${province_name}.
+
+Siento no poder serte de ayuda :(
+`,
+
+    waitForAnswer : () => 
+`
+¿Querés saber nuestra cobertura? Escribe la provincia por la que preguntas y con gusto te diré si tenemos disponibilidad.
+`
+}
+
+export const pbcc_messages = 
+{
+    success : () => 
+`
+Tu plan fue cancelado satisfactoriamente.
+¡Esperamos que vuelvas!
+`,
+    
+    invalidCode : () => 
+`
+No he encontrado ningún cliente con ese código. Comprueba que tenés un código correcto.
+`,
+
+    fail : () => 
+`
+¡Vaya! Ocurrió un error y no pude cancelar tu plan. Te recomiendo realizar el trámite desde nuestra página web.
+`
+}
+
+export const pc_messages = 
+{
+    success(pack : {internet : Internet_planes, tv : Television_planes | null, movil : Movil_planes | null})
+    { 
+        const price_internet = pack.internet.price;
+        const price_tv = pack.tv?.price ?? 0;
+        const price_movil = pack.movil?.price ?? 0;
+        const final_price = price_internet + price_tv + price_movil;
+        const text =
+`
+¡Listo! A continuación te recuerdo tu plan:
+
+* ${pack.internet.name} *
+- Bajada : ${pack.internet.downstream} Mb/s
+- Subida : ${pack.internet.upstream} Mb/s
+- Precio : $ ${pack.internet.price}
+${pcf_messages.setTvPackMessage(pack.tv)}
+${pcf_messages.setMovilPackMessage(pack.movil)}
+
+Precio final : $ ${final_price}
+`
+        return text;
+    }
+    ,
+    
+    invalidCode : () => 
+`
+No he encontrado ningún cliente con ese código. Comprueba que tenés un código correcto.
+`,
+    waitForAnswer : () => 
+    `
+    ¡Claro! Dime tu código de usuario y recordaré el plan que posees.
+    `
+}
+
+export const pcm_messages = 
+{
+    invalidCode()
+    {
+        return 'El código que ingresaste no pertenece a ningún cliente. Corrobora tu código para continuar.';
+    }
+}

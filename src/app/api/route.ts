@@ -9,6 +9,9 @@ export async function POST(request: Request)
     try
     {
         const typed_data = await request.json() as WebhookRequest;
+
+        console.log('REQUEST: ' + JSON.stringify(typed_data));
+        
         const response = await handleRequest(typed_data);
 
         if(response?.ok) return Response.json(response.response);

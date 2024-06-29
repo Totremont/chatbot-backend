@@ -17,7 +17,9 @@ export const Intents =
     plan_consultar : {display : 'plan-consultar'},
     plan_consultar_codigo : {display : 'plan-consultar - codigo'}, 
 
-    reclamo_generar : {display : 'reclamo-generar' }
+    reclamo_generar : {display : 'reclamo-generar' },
+    reclamo_ayuda : {display : 'Reclamo-ayuda'},
+    reclamo_ayuda_problema: {display : 'Reclamo-ayuda - problema'}
 }
 
 export const Params = 
@@ -28,7 +30,10 @@ export const Params =
     servicio_movil : {name : 'servicio-movil'},
     servicio_usuarios : {name : 'servicio-usuarios'},
     servicio_codigo : {name : 'servicio-codigo'},
-    servicio_internet : {name : 'servicio-internet'}
+    servicio_internet : {name : 'servicio-internet'},
+    servicio_ayuda : {name : 'servicio-ayuda'},
+    
+    reclamo_numero : {name: 'reclamo-numero'} 
 }
 
 export const Contexts = 
@@ -43,15 +48,28 @@ export const Contexts =
     },
     plan_modificar(session : string) 
     {
-        const object = {
-        name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/plan-baja-modificar-codigo-followup`,
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/plan-baja-modificar-codigo-followup`,
         }
         return object
+    },
+    reclamo_generar_ayuda(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-ayuda`,
+        }
+            return object
     }
 } 
 
+//Eventos se tratan como output context
 export const Events = 
 {
     conversation_end : {name : 'conversation-end'},
     plan_modificar : {name : 'plan-modificar'},
+    //Trigger para ir a Intent de ayuda
+    reclamo_generar_ayuda : {name : 'reclamo-generar-ayuda'},
+
 }

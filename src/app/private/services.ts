@@ -2,7 +2,7 @@ import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { getSession, simpleMessage } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -66,9 +66,10 @@ async function gateway(data : WebhookRequest)
         case Intents.plan_consultar_codigo.display:
             response = await pcHandler(data);
             break;
-            
-        case Intents.reclamo_generar.display:
-            response = await rgHandler(data);
+
+        case Intents.reclamo_ayuda.display:
+        case Intents.reclamo_ayuda_problema.display:
+            response = await raHandler(data);
             break;
         
         default:
@@ -383,19 +384,51 @@ async function pmfHandler(data : WebhookRequest)
 
 }
 
-async function rgHandler(data : WebhookRequest)
+//Este intent se puede triggerear por parámetro (opcional) o evento
+async function raHandler(data : WebhookRequest)
 {
     const response = {} as WebhookResponse;
-    response.followupEventInput = 
+    const session = getSession(data);
+    const param = data.queryResult.parameters?.[Params.servicio_ayuda.name] as string;
+    const param_num = data.queryResult.parameters?.[Params.reclamo_numero.name] as number;
+    const param_event = data.queryResult.outputContexts?.
+    find(it => it.name === Contexts.reclamo_generar_ayuda(session).name)?.parameters
+
+    if(param_event || param_num) //Ya es un número
     {
-        name : Events.conversation_end.name,
-        parameters : 
-        {
-            'parametro-evento:' : ' hola'
-        },
-        languageCode : 'es'
+        let type = param_num;
+        if(!param_num) type = param_event?.[Params.servicio_ayuda.name] as number;
+        response.fulfillmentMessages = simpleMessage(ra_messages.success(type));
     }
+    else if(param)  //Convertir a número
+    {
+        let type = -1;
+        switch(param)
+        {
+            case 'Internet':
+                type = 1;
+                break;
+            case 'Router':
+                type = 2;
+                break;
+            case 'Movil':
+                type = 3;
+                break;
+            case 'Televisión':
+                type = 4;
+                break;
+            case 'Factura':
+                type = 5;
+                break;
+        }
+        response.fulfillmentMessages = simpleMessage(ra_messages.success(type));
+    }
+    else response.fulfillmentMessages = simpleMessage(ra_messages.waitForAnswer());
     return response;
 }
+
+
+
+
 
 

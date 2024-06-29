@@ -219,7 +219,7 @@ export const pmf_messages =
     }
 
 }
-
+/*
 export const rgp_messages = 
 {
     withHelp : (selected : number) =>          
@@ -233,3 +233,4 @@ Por suerte, puedo darte unos consejos para resolver este problema.
 
     }
 }
+    */

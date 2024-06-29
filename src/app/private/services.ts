@@ -46,10 +46,12 @@ async function gateway(data : WebhookRequest)
         case Intents.plan_contratar_affirmative.display:
             response = await pcaHandler(data);
             break;
+
         case Intents.cobertura_conocer.display:
         case Intents.cobertura_conocer_province.display:
             response = await ccHandler(data);
             break;
+
         case Intents.plan_cancelar.display:
             response = await pbccHandler(data);
             break;
@@ -59,9 +61,14 @@ async function gateway(data : WebhookRequest)
         case Intents.plan_modificar_final.display:
             response = await pmfHandler(data);
             break;
+
         case Intents.plan_consultar.display:
         case Intents.plan_consultar_codigo.display:
             response = await pcHandler(data);
+            break;
+            
+        case Intents.reclamo_generar.display:
+            response = await rgHandler(data);
             break;
         
         default:
@@ -320,6 +327,8 @@ async function pmfHandler(data : WebhookRequest)
         const tv_pack = data.queryResult.parameters?.[Params.servicio_tv.name] as string;
         const movil_pack = data.queryResult.parameters?.[Params.servicio_movil.name] as string;
 
+        console.log()
+
         const pack = {internet : internet_pack, tv : tv_pack, movil : movil_pack}
 
         const values = await Promise.all(
@@ -372,6 +381,21 @@ async function pmfHandler(data : WebhookRequest)
     }
     else throw new Error('PMF: Parameters are null');
 
+}
+
+async function rgHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    response.followupEventInput = 
+    {
+        name : Events.conversation_end.name,
+        parameters : 
+        {
+            'parametro-evento:' : ' hola'
+        },
+        languageCode : 'es'
+    }
+    return response;
 }
 
 

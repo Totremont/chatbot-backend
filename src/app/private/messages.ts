@@ -219,3 +219,17 @@ export const pmf_messages =
     }
 
 }
+
+export const rgp_messages = 
+{
+    withHelp : (selected : number) =>          
+`
+Has seleccionado la opción [${selected}].
+Por suerte, puedo darte unos consejos para resolver este problema.
+¿Te gustaría recibir ayuda? En caso que no, continuaremos con el reclamo.
+` 
+    withoutHelp : () => 
+    {
+
+    }
+}

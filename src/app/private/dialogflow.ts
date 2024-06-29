@@ -15,7 +15,9 @@ export const Intents =
     plan_modificar_final : {display : 'Plan-baja - modificar - codigo - lista'},
 
     plan_consultar : {display : 'plan-consultar'},
-    plan_consultar_codigo : {display : 'plan-consultar - codigo'}
+    plan_consultar_codigo : {display : 'plan-consultar - codigo'}, 
+
+    reclamo_generar : {display : 'reclamo-generar' }
 }
 
 export const Params = 

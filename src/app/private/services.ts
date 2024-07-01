@@ -549,10 +549,11 @@ async function rgdcHandler(data : WebhookRequest)
     const session = getSession(data);
     const params = data.queryResult.outputContexts?.
     find(it => it.name === Contexts.reclamo_registrar_desc_followup(session).name)?.parameters;
+    //console.log('Params:' + JSON.stringify(params));
 
     const problem_num = params?.[Params.reclamo_numero.name] as number;     //Puede llegar como número o texto.
     let problem_type = params?.[Params.servicio_ayuda.name] as string;
-    if(!!problem_type && problem_num) problem_type = indexToProblem(problem_num);
+    if(!problem_type && problem_num) problem_type = indexToProblem(problem_num);
 
     if(code && problem_type)
     {
@@ -577,7 +578,7 @@ async function rgdcHandler(data : WebhookRequest)
         }
         else response.fulfillmentMessages = simpleMessage(rgdc_messages.invalidCode());
     }
-    else throw new Error('RGDC: User code was not found');
+    else throw new Error('RGDC: User code or problem type was not found');
     return response;
 }
 

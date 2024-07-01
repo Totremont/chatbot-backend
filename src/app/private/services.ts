@@ -72,7 +72,9 @@ async function gateway(data : WebhookRequest)
             response = await raHandler(data);
             break;
         
-        //case Intents.reclamo_generar_ayuda.display:
+        case Intents.reclamo_generar_desc.display:
+            response = await rgdHandler(data);
+            break;
         case Intents.reclamo_generar_desc_cod.display:
             response = await rgdcHandler(data);
             break;

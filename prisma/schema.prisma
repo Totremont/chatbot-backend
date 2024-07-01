@@ -53,6 +53,15 @@ model Movil_planes {
   @@map("Movil-planes")
 }
 
+model Reclamos {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  category    String
+  description String
+  expedition  DateTime @db.Date
+  status      String
+  user_code   String
+}
+
 model Regions {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   available Boolean
@@ -64,7 +73,7 @@ model Television_planes {
   channels      Int
   extras        String[]
   fhd_channels  Int
-  name          String   @unique
+  name          String  @unique
   price         Int
   uhd_channels_ Int      @map("uhd_channels:")
 

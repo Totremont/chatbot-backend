@@ -38,7 +38,7 @@ export type WebhookResponse =
   fulfillmentMessages: [Object],
   source?: string,
   payload?: Object,
-  outputContexts?: [Object],
+  outputContexts?: [{name : string, lifespanCount : number, parameters : Parameters}],
   followupEventInput?: {name : string, parameters : Parameters, languageCode : string},
   sessionEntityTypes?: [Object]
 }

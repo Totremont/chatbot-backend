@@ -18,8 +18,25 @@ export const Intents =
     plan_consultar_codigo : {display : 'plan-consultar - codigo'}, 
 
     reclamo_generar : {display : 'reclamo-generar' },
+    reclamo_generar_ayuda : {display : 'reclamo-generar - problema - ayuda' },
+
+    //Generando reclamo
+    reclamo_generar_continuar : {display : 'reclamo-generar - problema - continuar'},
+
+    //Para pasar el número de reclamo hacia desc-codigo
+    reclamo_generar_desc : {display : 'reclamo-generar - descripcion'},
+
+    reclamo_generar_desc_cod : {display : 'reclamo-generar - descripcion - codigo'},
+    reclamo_final : {display : 'reclamo-final'},
+
     reclamo_ayuda : {display : 'Reclamo-ayuda'},
-    reclamo_ayuda_problema: {display : 'Reclamo-ayuda - problema'}
+    reclamo_ayuda_problema: {display : 'Reclamo-ayuda - problema'},
+
+    reclamo_ayuda_inutil_affirmative : {display : 'Reclamo-ayuda - inutil - si'},
+
+    terminologia : {display : 'terminologia'},
+    terminologia_valor : {display : 'terminologia - valor'},
+
 }
 
 export const Params = 
@@ -33,7 +50,12 @@ export const Params =
     servicio_internet : {name : 'servicio-internet'},
     servicio_ayuda : {name : 'servicio-ayuda'},
     
-    reclamo_numero : {name: 'reclamo-numero'} 
+    reclamo_numero : {name: 'reclamo-numero'},
+    
+    termino : {name: 'termino'},
+    termino_numero: {name: 'termino-numero'}
+
+
 }
 
 export const Contexts = 
@@ -54,6 +76,27 @@ export const Contexts =
         }
         return object
     },
+
+    reclamo_ayuda_respuesta(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-ayuda-respuesta`,
+        }
+        return object
+    },
+ 
+    //Contexto para obtener problema y llevarlo a solucion
+    reclamo_generar_problema(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-problema-followup`,
+        }
+        return object
+    },
+
+    //Evento que se pasa a la solución
     reclamo_generar_ayuda(session : string)
     {
         const object = 
@@ -61,7 +104,38 @@ export const Contexts =
             name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-ayuda`,
         }
             return object
-    }
+    },
+
+    //Evento que recibe el creador de reclamos.
+    reclamo_registrar(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/${Events.reclamo_registrar.name}`,
+        }
+        return object
+    },
+
+    //Acá obtiene el número de problema el reclamo-generar - descripcion - codigo
+    reclamo_registrar_desc_followup(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-descripcion-followup`,
+        }
+        return object
+    },
+       
+    //Para obtener los parámetro del reclamo a la hora de realizarlo (Cod y queja).
+    reclamo_registrar_final(session : string)
+    {
+        const object = 
+        {
+            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-descripcion-codigo-followup`,
+        }
+        return object
+    },
+
 } 
 
 //Eventos se tratan como output context
@@ -72,4 +146,9 @@ export const Events =
     //Trigger para ir a Intent de ayuda
     reclamo_generar_ayuda : {name : 'reclamo-generar-ayuda'},
 
+    //Event que activa la creación de un reclamo.
+    reclamo_registrar : {name : 'reclamo-registrar'}
+
 }
+
+export const project_id = 'chatbot-production-426720';

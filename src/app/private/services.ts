@@ -1,8 +1,8 @@
 import { Internet_planes, PrismaClient } from "@prisma/client";
-import { Contexts, Events, Intents, Params } from "./dialogflow";
+import { Contexts, Events, Intents, Params, project_id } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
-import { getSession, simpleMessage } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages } from "./messages";
+import { problemToIndex, getSession, payloadMessage, simpleMessage, termToIndex, indexToProblem, Reclamo } from "./utils";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, rgf_messages, t_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -71,6 +71,26 @@ async function gateway(data : WebhookRequest)
         case Intents.reclamo_ayuda_problema.display:
             response = await raHandler(data);
             break;
+        
+        //case Intents.reclamo_generar_ayuda.display:
+        case Intents.reclamo_generar_desc_cod.display:
+            response = await rgdcHandler(data);
+            break;
+        
+        //Para generar el evento de creación de reclamo
+        case Intents.reclamo_generar_continuar.display:
+            response = await rgcHandler(data);
+            break;
+
+        case Intents.reclamo_final.display:
+            response = await rgfHandler(data);
+            break;
+
+        case Intents.terminologia.display:
+        case Intents.terminologia_valor.display:
+            response = tHandler(data);
+            break;
+        
         
         default:
             throw new Error('Gateway ERROR : Matching Intent was not found');
@@ -385,46 +405,212 @@ async function pmfHandler(data : WebhookRequest)
 }
 
 //Este intent se puede triggerear por parámetro (opcional) o evento
-async function raHandler(data : WebhookRequest)
+function raHandler(data : WebhookRequest)
 {
     const response = {} as WebhookResponse;
     const session = getSession(data);
     const param = data.queryResult.parameters?.[Params.servicio_ayuda.name] as string;
     const param_num = data.queryResult.parameters?.[Params.reclamo_numero.name] as number;
+
+    //Si viene del evento reclamo-generar-ayuda
     const param_event = data.queryResult.outputContexts?.
-    find(it => it.name === Contexts.reclamo_generar_ayuda(session).name)?.parameters
+    find(it => it.name === Contexts.reclamo_generar_ayuda(session).name)?.
+    parameters?.[Params.reclamo_numero.name] as number;
 
     if(param_event || param_num) //Ya es un número
     {
         let type = param_num;
-        if(!param_num) type = param_event?.[Params.servicio_ayuda.name] as number;
+        if(!param_num) type = param_event;
         response.fulfillmentMessages = simpleMessage(ra_messages.success(type));
+        response.outputContexts = 
+        [
+            {
+                name : Contexts.reclamo_ayuda_respuesta(session).name,
+                lifespanCount : 2,
+                parameters : {}
+            }
+        ]
     }
     else if(param)  //Convertir a número
     {
         let type = -1;
-        switch(param)
-        {
-            case 'Internet':
-                type = 1;
-                break;
-            case 'Router':
-                type = 2;
-                break;
-            case 'Movil':
-                type = 3;
-                break;
-            case 'Televisión':
-                type = 4;
-                break;
-            case 'Factura':
-                type = 5;
-                break;
-        }
+        type = problemToIndex(param);
         response.fulfillmentMessages = simpleMessage(ra_messages.success(type));
+        response.outputContexts = 
+        [
+            {
+                name : Contexts.reclamo_ayuda_respuesta(session).name,
+                lifespanCount : 2,
+                parameters : {}
+            }
+        ]
     }
     else response.fulfillmentMessages = simpleMessage(ra_messages.waitForAnswer());
     return response;
+}
+
+function tHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const term = data.queryResult.parameters?.[Params.termino.name] as string;
+    const term_num = data.queryResult.parameters?.[Params.termino_numero.name] as number;
+    let type = term_num;
+
+    if(term) type = termToIndex(term);
+    
+    if(type) response.fulfillmentMessages = payloadMessage(t_messages.success(type));
+    else response.fulfillmentMessages = simpleMessage(t_messages.waitForAnswer());
+
+    return response;
+    
+}
+
+//Generamos el evento reclamo-generar-ayuda con el parámetro del número de problema
+function rgaHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const session = getSession(data);
+    const param = data.queryResult.outputContexts?.find(it => it.name === Contexts.reclamo_generar_problema(session).name);
+    const type = param?.parameters?.[Params.reclamo_numero.name] as number;
+    if(type)
+    {
+        response.followupEventInput = 
+        {
+            name : Events.reclamo_generar_ayuda.name,
+            parameters : {'reclamo-numero' : type},
+            languageCode : 'es'
+        };
+    }
+    else throw new Error('RGA: No problem type was found');
+
+    return response;
+
+}
+
+//Generamos el evento reclamo-registrar
+function rgcHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const session = getSession(data);
+    const param = data.queryResult.outputContexts?.find(it => it.name === Contexts.reclamo_generar_problema(session).name);
+    const type = param?.parameters?.[Params.reclamo_numero.name] as number;
+    if(type)
+    {
+        response.followupEventInput = 
+        {
+            name : Events.reclamo_registrar.name,
+            parameters : {'reclamo-numero' : type},
+            languageCode : 'es'
+        };
+    }
+    else throw new Error('RGA: No problem type was found');
+
+    return response;
+
+}
+
+async function rgdHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const session = getSession(data);
+    //Parametros del evento reclamo-registrar
+    const params = data.queryResult.outputContexts?.
+    find(it => it.name === Contexts.reclamo_registrar(session).name)?.parameters;
+    const problem_num = params?.[Params.reclamo_numero.name] as number;
+    const problem_type = params?.[Params.servicio_ayuda.name] as string;
+    if(problem_num || problem_type)
+    {
+        response.fulfillmentMessages = simpleMessage(rgd_messages.success());
+        response.outputContexts = 
+        [
+            {
+                name: Contexts.reclamo_registrar_desc_followup(session).name,
+                lifespanCount : 2,
+                parameters : 
+                {
+                    'servicio-ayuda' : problem_type,
+                    'reclamo-numero' : problem_num
+                }
+            }
+        ]
+    }
+    else throw new Error('RGD: Event did not have parameters');
+
+    return response;
+
+}
+
+async function rgdcHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const code = data.queryResult.parameters?.[Params.servicio_codigo.name] as string;
+    const session = getSession(data);
+    const params = data.queryResult.outputContexts?.
+    find(it => it.name === Contexts.reclamo_registrar_desc_followup(session).name)?.parameters;
+
+    const problem_num = params?.[Params.reclamo_numero.name] as number;     //Puede llegar como número o texto.
+    let problem_type = params?.[Params.servicio_ayuda.name] as string;
+    if(!!problem_type && problem_num) problem_type = indexToProblem(problem_num);
+
+    if(code && problem_type)
+    {
+        const client = await prisma.clients.findUnique({where : {id : code}});
+        if(client)
+        {
+            response.fulfillmentMessages = simpleMessage(rgdc_messages.success());
+            response.outputContexts = 
+            [
+                {
+                    name: Contexts.reclamo_registrar_final(session).name,
+                    lifespanCount : 2,
+                    parameters : 
+                    {
+                        'servicio-codigo' : code,
+                        'servicio-ayuda' : problem_type
+                    }
+
+                }
+            ]
+
+        }
+        else response.fulfillmentMessages = simpleMessage(rgdc_messages.invalidCode());
+    }
+    else throw new Error('RGDC: User code was not found');
+    return response;
+}
+
+
+async function rgfHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const session = getSession(data);
+
+    const desc = data.queryResult.queryText;
+    const params = data.queryResult.outputContexts?.
+    find(it => it.name === Contexts.reclamo_registrar_final(session).name)?.parameters;
+
+    const code = params?.[Params.servicio_codigo.name] as string;
+    let problem_type = params?.[Params.servicio_ayuda.name] as string;
+
+    if(code && problem_type)
+    {
+        const reclamo = await prisma.reclamos.create(
+        {
+            data : 
+            {
+                category : problem_type,
+                description : desc,
+                expedition : new Date(),
+                status : Reclamo.PENDIENTE,
+                user_code : code
+            }
+        })
+        response.fulfillmentMessages = simpleMessage(rgf_messages.success());
+    }
+    else throw new Error('RGF: Parameters to create reclamo were not found');
+
+    return response;
+
 }
 
 

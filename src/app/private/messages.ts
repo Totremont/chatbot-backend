@@ -255,6 +255,44 @@ De los inconvenientes listados debajo, ¿cuál corresponde a tu problema?
 `
 }
 
+
+
+export const rgdc_messages = 
+{
+    invalidCode : () => 
+`
+El código que ingresaste no pertenece a ningún usuario. Corroborá que tu información es correcta.
+`,
+    success : () => 
+`
+Anotado.
+Por último, necesito que des una breve descripción de tu inconveniente para darle más información a nuestro soporte.
+Lo siguiente que escribas se agregará como parte de tu reclamo.
+Si querés cancelar esta operación, escribí 'Cancelar';
+
+`
+}
+
+//1 - Datos 2 - Gen 3 - Velocidad 4 - Fibra 5 - Streaming 6 - HD 
+export const t_messages = 
+{
+    success : (term : number) => getExplainMessage(term),
+    waitForAnswer : () => 
+`
+¿Querés que te explique un término? ¡Con gusto!
+Estoy capacitado para resolver dudas sobre:
+
+1- Datos y redes móviles.
+2- Generaciones móviles (3G, 4G, 5G).
+3- Velocidades de Internet.
+4- Sobre la fibra óptica.
+5- Sobre los servicios de streaming.
+6- Sobre las resoluciones y calidad de televisión.
+
+¿En cuál de ellos te puedo asistir?
+`
+}
+
 //1 - Internet 2 - Router 3 - Movil 4 - Television 5 - Factura 6 - Contratar
 function getHelpMessage(type : number)
 {
@@ -393,4 +431,155 @@ Te recomiendo contactar con nuestro soporte y/o generar un reclamo.
                 break;
     }
     return msg;
+}
+
+export const rgd_messages =
+{
+    success : () => 
+`
+Para poder generar un reclamo, primero necesito que me proveas de tu código de usuario. 
+De esta forma, quedará asociado a tu cuenta y podrás consultarlo más adelante.
+` 
+}
+
+export const rgf_messages =
+{
+    success : () => 
+`
+¡Listo! Tu reclamo fue subido y pronto será atendido por un empleado de soporte.
+Recordá que podés ver el estado todos tus reclamos con tu código de usuario.
+` 
+}
+
+
+
+
+
+
+
+
+function getExplainMessage(term : number)
+{
+    let text = '';
+    switch(term)
+    {
+        case 1:
+            text = 
+`
+¿No entendés que son los datos móviles o gigas? ¡Te ayudo!
+
+Nuestra red móvil te permiten conectarte a Internet adentro y fuera de tu casa y sin depender de una red Wi-Fi.
+Al contratar un pack de telefonía obtenés acceso a la misma para consumir una cierta cantidad de contenido durante un período determinado (un mes).
+Tu consumo se mide en Gigabytes (Gigas o GB), que es una unidad de trasferencia de información entre dispositivos, a lo largo de Internet. Estos son los 'datos móviles'.
+Cada vez que consumís (descargás o subís) contenido usando la red móvil (ej: acceder a una página web, ver videos, etc) estás gastando los datos que tenés asignados.
+Cuando tus datos se agotan, tenés que esperar hasta el próximo mes para renovarlos.
+
+Tu celular tiene funciones que te permiten ver la cantidad de datos móviles que has consumido a lo largo de un período.
+
+Espero te haya sido de ayuda.
+`;
+            break;
+        case 2:
+            text = 
+            `
+¿No entendés que es el 4G, 5G? ¡Te ayudo!
+
+Los distintos avances en las tecnologías de la telefonía móvil han sido categorizados como 'generaciones' utilizando la abreviatura 'G' desde el 0G.
+Con 'movil' no nos referimos solo a los celulares, sino a las comunicaciones inalámbricas.
+Las redes móviles terrestres se basan en antenas para recibir y transmitir señales.
+También existen las redes satelitales que retransmiten señales utilizando satélites en el espacio.
+
+El cambio más importante ocurrió con la llegada del *3G*, debido a que permitió globalizar y acelerar el acceso a Internet desde los teléfonos, usando las redes móviles.
+
+Resumidamente, tu celular convierte información en ondas de radio que se envían a la antena más cercana. Ésta las procesa y retransmite hacia donde deben ir. El proceso inverso se da cuando recibes información.
+Esto te permite acceder a Internet desde tu celular o móvil.
+
+Las subsiguientes tecnologías (4G y 5G) han seguido mejorando las capacidades de las redes móviles. 
+Las redes *4G* son hasta 5 veces más rápidas que las 3G y ofrecen menor latencia y mayor ancho de banda.
+Las redes *5G* son la última generación y se estima que pueden ser hasta 100 veces más rápidas que el 4G.
+
+Si querés más información: [acá te dejo un enlace](https://darwincav.com/es/whats-the-difference-between-3g-4g-and-5g/).
+
+Espero te haya sido de ayuda.
+`;
+            break;
+        case 3:
+            text = 
+            `
+¿No entendés que son los MB/s? ¡Te ayudo!
+
+Te daré un resumen de los términos que necesitás saber antes de contratar Bit-Stream.
+
+1 - Velocidad: Se refiere a la cantidad de datos que transmitís por Internet en un rango de tiempo.
+1.1 - Subida : Datos que subís a Internet. Por ejemplo, cuando almacenás un archivo en la nube.
+1.2 - Bajada : Datos que recibís desde Internet. Por ejemplo, cuando visitás una página web o descargás un archivo.
+
+2 - Unidades: todas son relativas al 'bit', que es la unidad mínima de información digital.
+- Mb/s : Mide el consumo en megabits por segundo. Es importante no confundir con megabyte (*B* mayúscula MB/s).
+- MB/s : Megabytes por segundo. Un byte equivale a 8 bits y, por tanto, es una unidad 8 veces mayor al megabit.
+- GB/s : Gigabytes por segundo. Equivale a 1024 MB/s. No es utilizada para medir velocidad por ser muy grande.
+
+3 - Conversión: Nuestros planes ofrecen velocidades medidas en Mb/s. Para calcular cuánto equivale en MB/s tenés que dividir el valor por 8.
+
+
+Espero te haya sido de ayuda.
+`;
+            break;
+        case 4:
+            text = 
+            `
+¿No entendés que es la fibra óptica? ¡Te ayudo!
+
+La Internet por fibra óptica es una tecnología compleja que permite la transmisión de información en forma de luz, en lugar de electricidad.
+El tramo entre la línea de la red de fibra principal y el usuario final se denomina "última milla".
+Esta tecnología ofrece un ancho de banda muy superior al de los cables de par trenzado DSL o las redes Wi-Fi, con un alto grado de confiabilidad y baja latencia.
+
+Eso es todo lo que tenés que saber.
+Para más información: [te dejo este enlace](https://espanol.centurylink.com/home/help/internet/fiber/what-is-fiber-internet.html).
+
+
+Espero te haya sido de ayuda.
+`;
+            break;
+        case 5:
+            text = 
+            `
+¿No entendés que es el Streaming? ¡Te ayudo!
+
+El concepto de streaming se refiere a cualquier contenido que se puede disfrutar a través de internet en tiempo real. 
+Los podcasts, películas, programas de TV y videos en vivo son ejemplos de contenido streaming.
+Llevan este nombre (del inglés - stream: flujo, corriente) debido a que el contenido lo vas obteniendo a medida que lo vas consumiendo.
+Desde el punto de vista de Internet, el contenido 'fluje' desde los servidores a tu dispositivo a lo largo del tiempo.
+
+
+Espero te haya sido de ayuda.
+`;
+            break;
+        case 6:
+            text = 
+            `
+¿No entendés que es la televisión HD, 4K? ¡Te ayudo!
+
+Te daré un resumen de los términos que necesitás saber antes de contratar Bit-Stream.
+
+1 - Resolución: Se refiere a la cantidad de pixeles que conforman una imagen. A mayor resolución, mayor claridad y calidad.
+La resolución se mide en: [pixeles horizontales] x [pixeles verticales] y los píxeles totales salen de esta multiplicación.
+1.1 - HD (High Definition): 1280x720
+1.2 - FHD (Full High Definition): 1920x1080
+1.3 - UHD ó 4K : 3840x2160. Es una resolución 4 veces superior al FHD y 9 veces al HD.
+
+Es importante que entiendas que, para que un contenido se reproduzca en una resolución determinada, se debe cumplir que tanto tu pantalla como el dispositivo de reproducción soporten esa resolución.
+Las pantallas de una resolución determinada soportan esa y todas las inferiores.
+Los dispositivos de reproducción pueden ser un decodificador o un servicio de streaming Netflix o YouTube. En estos casos, la resolución máxima soportada dependerá del plan y/o video correspondiente.
+
+
+Espero te haya sido de ayuda.
+`;
+        break;
+    default:
+        text = 'Parece que me pediste ayuda con un término que desconozco. Lo siento';
+        break;
+
+    }
+    return text;
 }

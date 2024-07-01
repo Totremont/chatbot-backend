@@ -2,7 +2,7 @@ import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params, project_id } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { problemToIndex, getSession, payloadMessage, simpleMessage, termToIndex, indexToProblem, Reclamo } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, rgf_messages, t_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, t_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -82,10 +82,6 @@ async function gateway(data : WebhookRequest)
         //Para generar el evento de creación de reclamo
         case Intents.reclamo_generar_continuar.display:
             response = await rgcHandler(data);
-            break;
-
-        case Intents.reclamo_final.display:
-            response = await rgfHandler(data);
             break;
 
         case Intents.terminologia.display:
@@ -560,60 +556,24 @@ async function rgdcHandler(data : WebhookRequest)
         const client = await prisma.clients.findUnique({where : {id : code}});
         if(client)
         {
-            response.fulfillmentMessages = simpleMessage(rgdc_messages.success());
-            response.outputContexts = 
-            [
+            const reclamo = await prisma.reclamos.create(
                 {
-                    name: Contexts.reclamo_registrar_final(session).name,
-                    lifespanCount : 2,
-                    parameters : 
+                    data : 
                     {
-                        'servicio-codigo' : code,
-                        'servicio-ayuda' : problem_type
+                        category : problem_type,
+                        description : 'desc',
+                        expedition : new Date(),
+                        status : Reclamo.PENDIENTE,
+                        user_code : code
                     }
-
-                }
-            ]
-
+                })
+            if(reclamo) response.fulfillmentMessages = simpleMessage(rgdc_messages.success());
+            else throw new Error('RGDC: Error creating Reclamo');
         }
         else response.fulfillmentMessages = simpleMessage(rgdc_messages.invalidCode());
     }
     else throw new Error('RGDC: User code or problem type was not found');
     return response;
-}
-
-
-async function rgfHandler(data : WebhookRequest)
-{
-    const response = {} as WebhookResponse;
-    const session = getSession(data);
-
-    const desc = data.queryResult.queryText;
-    const params = data.queryResult.outputContexts?.
-    find(it => it.name === Contexts.reclamo_registrar_final(session).name)?.parameters;
-
-    const code = params?.[Params.servicio_codigo.name] as string;
-    let problem_type = params?.[Params.servicio_ayuda.name] as string;
-
-    if(code && problem_type)
-    {
-        const reclamo = await prisma.reclamos.create(
-        {
-            data : 
-            {
-                category : problem_type,
-                description : desc,
-                expedition : new Date(),
-                status : Reclamo.PENDIENTE,
-                user_code : code
-            }
-        })
-        response.fulfillmentMessages = simpleMessage(rgf_messages.success());
-    }
-    else throw new Error('RGF: Parameters to create reclamo were not found');
-
-    return response;
-
 }
 
 

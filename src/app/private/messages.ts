@@ -256,23 +256,6 @@ De los inconvenientes listados debajo, ¿cuál corresponde a tu problema?
 }
 
 
-
-export const rgdc_messages = 
-{
-    invalidCode : () => 
-`
-El código que ingresaste no pertenece a ningún usuario. Corroborá que tu información es correcta.
-`,
-    success : () => 
-`
-Anotado.
-Por último, necesito que des una breve descripción de tu inconveniente para darle más información a nuestro soporte.
-Lo siguiente que escribas se agregará como parte de tu reclamo.
-Si querés cancelar esta operación, escribí 'Cancelar';
-
-`
-}
-
 //1 - Datos 2 - Gen 3 - Velocidad 4 - Fibra 5 - Streaming 6 - HD 
 export const t_messages = 
 {
@@ -291,6 +274,29 @@ Estoy capacitado para resolver dudas sobre:
 
 ¿En cuál de ellos te puedo asistir?
 `
+}
+
+export const rgdc_messages = 
+{
+    invalidCode : () => 
+`
+El código que ingresaste no pertenece a ningún usuario. Corroborá que tu información es correcta.
+`,
+    success : () => 
+`
+¡Listo! Tu reclamo fue subido y pronto será atendido por un empleado de soporte.
+Recordá que podés ver el estado todos tus reclamos con tu código de usuario.
+
+`
+}
+
+export const rgd_messages =
+{
+    success : () => 
+`
+Para poder generar un reclamo, primero necesito que me proveas de tu código de usuario. 
+De esta forma, quedará asociado a tu cuenta y podrás consultarlo más adelante.
+` 
 }
 
 //1 - Internet 2 - Router 3 - Movil 4 - Television 5 - Factura 6 - Contratar
@@ -432,30 +438,6 @@ Te recomiendo contactar con nuestro soporte y/o generar un reclamo.
     }
     return msg;
 }
-
-export const rgd_messages =
-{
-    success : () => 
-`
-Para poder generar un reclamo, primero necesito que me proveas de tu código de usuario. 
-De esta forma, quedará asociado a tu cuenta y podrás consultarlo más adelante.
-` 
-}
-
-export const rgf_messages =
-{
-    success : () => 
-`
-¡Listo! Tu reclamo fue subido y pronto será atendido por un empleado de soporte.
-Recordá que podés ver el estado todos tus reclamos con tu código de usuario.
-` 
-}
-
-
-
-
-
-
 
 
 function getExplainMessage(term : number)

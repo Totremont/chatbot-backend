@@ -27,7 +27,7 @@ export const Intents =
     reclamo_generar_desc : {display : 'reclamo-generar - descripcion'},
 
     reclamo_generar_desc_cod : {display : 'reclamo-generar - descripcion - codigo'},
-    reclamo_final : {display : 'reclamo-final'},
+    //reclamo_final : {display : 'reclamo-final'},
 
     reclamo_ayuda : {display : 'Reclamo-ayuda'},
     reclamo_ayuda_problema: {display : 'Reclamo-ayuda - problema'},
@@ -124,17 +124,7 @@ export const Contexts =
             name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-descripcion-followup`,
         }
         return object
-    },
-       
-    //Para obtener los parámetro del reclamo a la hora de realizarlo (Cod y queja).
-    reclamo_registrar_final(session : string)
-    {
-        const object = 
-        {
-            name : `projects/chatbot-production-426720/agent/sessions/${session}/contexts/reclamo-generar-descripcion-codigo-followup`,
-        }
-        return object
-    },
+    }
 
 } 
 

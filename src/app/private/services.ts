@@ -2,7 +2,7 @@ import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params, project_id } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { problemToIndex, getSession, payloadMessage, simpleMessage, termToIndex, indexToProblem, Reclamo } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, t_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, rgp_messages, t_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -70,6 +70,12 @@ async function gateway(data : WebhookRequest)
         case Intents.reclamo_ayuda.display:
         case Intents.reclamo_ayuda_problema.display:
             response = await raHandler(data);
+            break;
+        case Intents.reclamo_generar_problema.display:
+            response = await rgpHandler(data);
+            break;
+        case Intents.reclamo_ayuda_inutil_affirmative.display:
+            response = await raiHandler(data);
             break;
         
         case Intents.reclamo_generar_desc.display:
@@ -424,8 +430,11 @@ function raHandler(data : WebhookRequest)
         [
             {
                 name : Contexts.reclamo_ayuda_respuesta(session).name,
-                lifespanCount : 2,
-                parameters : {}
+                lifespanCount : 4,
+                parameters : 
+                {
+                    'reclamo-numero' : type
+                }
             }
         ]
     }
@@ -438,8 +447,11 @@ function raHandler(data : WebhookRequest)
         [
             {
                 name : Contexts.reclamo_ayuda_respuesta(session).name,
-                lifespanCount : 2,
-                parameters : {}
+                lifespanCount : 4,
+                parameters : 
+                {
+                    'reclamo-numero' : type
+                }
             }
         ]
     }
@@ -464,11 +476,11 @@ function tHandler(data : WebhookRequest)
 }
 
 //Generamos el evento reclamo-generar-ayuda con el parámetro del número de problema
-function rgaHandler(data : WebhookRequest)
+function raiHandler(data : WebhookRequest)
 {
     const response = {} as WebhookResponse;
     const session = getSession(data);
-    const param = data.queryResult.outputContexts?.find(it => it.name === Contexts.reclamo_generar_problema(session).name);
+    const param = data.queryResult.outputContexts?.find(it => it.name === Contexts.reclamo_ayuda_respuesta(session).name);
     const type = param?.parameters?.[Params.reclamo_numero.name] as number;
     if(type)
     {
@@ -478,8 +490,16 @@ function rgaHandler(data : WebhookRequest)
             parameters : {'reclamo-numero' : type},
             languageCode : 'es'
         };
+        response.outputContexts = 
+        [
+            {
+                name : Contexts.reclamo_ayuda_respuesta(session).name,
+                lifespanCount : 0,
+                parameters : {}
+            }
+        ]
     }
-    else throw new Error('RGA: No problem type was found');
+    else throw new Error('RAI: No problem type was found');
 
     return response;
 
@@ -573,6 +593,27 @@ async function rgdcHandler(data : WebhookRequest)
         else response.fulfillmentMessages = simpleMessage(rgdc_messages.invalidCode());
     }
     else throw new Error('RGDC: User code or problem type was not found');
+    return response;
+}
+
+async function rgpHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const option = data.queryResult.parameters?.[Params.reclamo_numero.name] as number;
+    if(option)
+    {
+        if(option >= 6) 
+        {
+            response.followupEventInput = 
+            {
+                name : Events.reclamo_registrar.name,
+                parameters : {'reclamo-numero' : option},
+                languageCode : 'es'
+            };
+        }
+        else response.fulfillmentMessages = simpleMessage(rgp_messages.success(option));
+    }
+    else throw new Error('RGP: No problem option was found');
     return response;
 }
 

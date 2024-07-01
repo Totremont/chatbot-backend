@@ -20,6 +20,8 @@ export const Intents =
     reclamo_generar : {display : 'reclamo-generar' },
     reclamo_generar_ayuda : {display : 'reclamo-generar - problema - ayuda' },
 
+    reclamo_generar_problema : {display: 'reclamo-generar - problema'},
+
     //Generando reclamo
     reclamo_generar_continuar : {display : 'reclamo-generar - problema - continuar'},
 

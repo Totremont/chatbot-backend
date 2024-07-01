@@ -299,6 +299,16 @@ De esta forma, quedará asociado a tu cuenta y podrás consultarlo más adelante
 ` 
 }
 
+export const rgp_messages =
+{
+    success : (option : number) => 
+`
+Has seleccionado la opción [${option}].
+Por suerte, puedo darte unos consejos para resolver este problema.
+¿Te gustaría recibir ayuda? En caso que no, continuaremos con el reclamo.
+` 
+}
+
 //1 - Internet 2 - Router 3 - Movil 4 - Television 5 - Factura 6 - Contratar
 function getHelpMessage(type : number)
 {
@@ -480,7 +490,7 @@ Las subsiguientes tecnologías (4G y 5G) han seguido mejorando las capacidades d
 Las redes *4G* son hasta 5 veces más rápidas que las 3G y ofrecen menor latencia y mayor ancho de banda.
 Las redes *5G* son la última generación y se estima que pueden ser hasta 100 veces más rápidas que el 4G.
 
-Si querés más información: [acá te dejo un enlace](https://darwincav.com/es/whats-the-difference-between-3g-4g-and-5g/).
+Si querés más información acá te dejo un enlace: (https://darwincav.com/es/whats-the-difference-between-3g-4g-and-5g/).
 
 Espero te haya sido de ayuda.
 `;
@@ -517,7 +527,7 @@ El tramo entre la línea de la red de fibra principal y el usuario final se deno
 Esta tecnología ofrece un ancho de banda muy superior al de los cables de par trenzado DSL o las redes Wi-Fi, con un alto grado de confiabilidad y baja latencia.
 
 Eso es todo lo que tenés que saber.
-Para más información: [te dejo este enlace](https://espanol.centurylink.com/home/help/internet/fiber/what-is-fiber-internet.html).
+Para más información acá te dejo un enlace: (https://espanol.centurylink.com/home/help/internet/fiber/what-is-fiber-internet.html).
 
 
 Espero te haya sido de ayuda.
@@ -530,8 +540,8 @@ Espero te haya sido de ayuda.
 
 El concepto de streaming se refiere a cualquier contenido que se puede disfrutar a través de internet en tiempo real. 
 Los podcasts, películas, programas de TV y videos en vivo son ejemplos de contenido streaming.
-Llevan este nombre (del inglés - stream: flujo, corriente) debido a que el contenido lo vas obteniendo a medida que lo vas consumiendo.
-Desde el punto de vista de Internet, el contenido 'fluje' desde los servidores a tu dispositivo a lo largo del tiempo.
+Llevan este nombre ( del inglés - stream: flujo, corriente ) debido a que el contenido se descarga a medida que se consume.
+Desde el punto de vista de Internet, el contenido 'fluye' desde los servidores a tu dispositivo a lo largo del tiempo.
 
 
 Espero te haya sido de ayuda.
@@ -545,6 +555,7 @@ Espero te haya sido de ayuda.
 Te daré un resumen de los términos que necesitás saber antes de contratar Bit-Stream.
 
 1 - Resolución: Se refiere a la cantidad de pixeles que conforman una imagen. A mayor resolución, mayor claridad y calidad.
+
 La resolución se mide en: [pixeles horizontales] x [pixeles verticales] y los píxeles totales salen de esta multiplicación.
 1.1 - HD (High Definition): 1280x720
 1.2 - FHD (Full High Definition): 1920x1080
@@ -552,7 +563,7 @@ La resolución se mide en: [pixeles horizontales] x [pixeles verticales] y los p
 
 Es importante que entiendas que, para que un contenido se reproduzca en una resolución determinada, se debe cumplir que tanto tu pantalla como el dispositivo de reproducción soporten esa resolución.
 Las pantallas de una resolución determinada soportan esa y todas las inferiores.
-Los dispositivos de reproducción pueden ser un decodificador o un servicio de streaming Netflix o YouTube. En estos casos, la resolución máxima soportada dependerá del plan y/o video correspondiente.
+Los dispositivos de reproducción pueden ser un decodificador o un servicio de streaming como Netflix o YouTube. En estos casos, la resolución máxima soportada dependerá del plan y/o video correspondiente.
 
 
 Espero te haya sido de ayuda.

@@ -1,4 +1,4 @@
-import { Internet_planes, Movil_planes, Television_planes } from "@prisma/client"
+import { Internet_planes, Movil_planes, Reclamos, Television_planes } from "@prisma/client"
 
 export const pcp_messages = 
 {
@@ -183,9 +183,9 @@ Precio final : $ ${final_price}
 No he encontrado ningún cliente con ese código. Comprueba que tenés un código correcto.
 `,
     waitForAnswer : () => 
-    `
-    ¡Claro! Dime tu código de usuario y recordaré el plan que posees.
-    `
+`
+¡Claro! Dime tu código de usuario y te recordaré el plan que posees.
+`
 }
 
 export const pcm_messages = 
@@ -307,6 +307,40 @@ Has seleccionado la opción [${option}].
 Por suerte, puedo darte unos consejos para resolver este problema.
 ¿Te gustaría recibir ayuda? En caso que no, continuaremos con el reclamo.
 ` 
+}
+
+export const rc_messages = 
+{
+    success : (reclamos : Reclamos[]) => 
+    {
+        let text = '';
+        if(reclamos.length)
+        {   
+            text = 'A continuación te muestro los reclamos que he encontrado.\n'
+            reclamos.forEach((it,index) => text.concat(
+`
+==
+Reclamo #${index}:
+Tipo de problema : ${it.category}
+Fecha de creación: ${it.expedition.getDay} / ${it.expedition.getMonth} / ${it.expedition.getFullYear}
+Estado actual: ${it.status}
+
+
+`
+            ))
+        } 
+        else text = 'Parece que no tenés ningún reclamo registrado con este usuario.'
+        return text;
+    }
+    ,
+    invalidCode : () => 
+`
+No he encontrado ningún cliente con ese código. Comprueba que tenés un código correcto.
+`,
+    waitForAnswer : () => 
+`
+¡Claro! Dime tu código de usuario y te diré todos los reclamos que posees, junto con sus estados.
+`
 }
 
 //1 - Internet 2 - Router 3 - Movil 4 - Television 5 - Factura 6 - Contratar
@@ -576,3 +610,5 @@ Espero te haya sido de ayuda.
     }
     return text;
 }
+
+

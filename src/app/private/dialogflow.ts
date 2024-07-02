@@ -36,6 +36,10 @@ export const Intents =
 
     reclamo_ayuda_inutil_affirmative : {display : 'Reclamo-ayuda - inutil - si'},
 
+    //Ver reclamos
+    reclamo_consultar : {display : 'reclamo-consultar'},
+    reclamo_consultar_codigo : {display : 'reclamo-consultar - codigo'},
+
     terminologia : {display : 'terminologia'},
     terminologia_valor : {display : 'terminologia - valor'},
 

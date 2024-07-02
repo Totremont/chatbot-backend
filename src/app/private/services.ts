@@ -2,7 +2,7 @@ import { Internet_planes, PrismaClient } from "@prisma/client";
 import { Contexts, Events, Intents, Params, project_id } from "./dialogflow";
 import { WebhookRequest, WebhookResponse } from "./types";
 import { problemToIndex, getSession, payloadMessage, simpleMessage, termToIndex, indexToProblem, Reclamo } from "./utils";
-import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rgd_messages, rgdc_messages, rgp_messages, t_messages } from "./messages";
+import { cc_messages, pbcc_messages, pc_messages, pca_messages, pcf_messages, pcm_messages, pcp_messages, pmf_messages, ra_messages, rc_messages, rgd_messages, rgdc_messages, rgp_messages, t_messages } from "./messages";
 
 // This should create a single instance in most scenarios
 // Var variables are stored in global objects.
@@ -97,6 +97,11 @@ async function gateway(data : WebhookRequest)
         case Intents.terminologia.display:
         case Intents.terminologia_valor.display:
             response = tHandler(data);
+            break;
+
+        case Intents.reclamo_consultar.display:
+        case Intents.reclamo_consultar_codigo.display:
+            response = await rcHandler(data);
             break;
         
         
@@ -643,6 +648,25 @@ async function rgpaHandler(data : WebhookRequest)
         }
     }
     else throw new Error('RGPA: No problem number found');
+
+    return response;
+}
+
+async function rcHandler(data : WebhookRequest)
+{
+    let response = {} as WebhookResponse;
+    const code = data.queryResult.parameters?.[Params.servicio_codigo.name] as string;
+    if(code)
+    {
+        const client = await prisma.clients.findUnique({where : {id : code}});
+        if(client)
+        {
+            const reclamos = await prisma.reclamos.findMany({where : {user_code : code}});
+            response.fulfillmentMessages = simpleMessage(rc_messages.success(reclamos));
+        }
+        else response.fulfillmentMessages =  simpleMessage(rc_messages.invalidCode());
+    }
+    else response.fulfillmentMessages =  simpleMessage(rc_messages.waitForAnswer());
 
     return response;
 }

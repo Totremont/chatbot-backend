@@ -317,7 +317,7 @@ export const rc_messages =
         if(reclamos.length)
         {   
             text = 'A continuación te muestro los reclamos que he encontrado.\n'
-            reclamos.forEach((it,index) => text.concat(
+            reclamos.forEach((it,index) => text = text.concat(
 `
 ==
 Reclamo #${index}:

@@ -479,7 +479,7 @@ function tHandler(data : WebhookRequest)
     
 }
 
-//Generamos el evento reclamo-generar-ayuda con el parámetro del número de problema
+//Generamos el evento reclamo-registrar con el parámetro del número de problema
 function raiHandler(data : WebhookRequest)
 {
     const response = {} as WebhookResponse;
@@ -490,10 +490,11 @@ function raiHandler(data : WebhookRequest)
     {
         response.followupEventInput = 
         {
-            name : Events.reclamo_generar_ayuda.name,
+            name : Events.reclamo_registrar.name,
             parameters : {'reclamo-numero' : type},
             languageCode : 'es'
         };
+        
         response.outputContexts = 
         [
             {
@@ -502,6 +503,7 @@ function raiHandler(data : WebhookRequest)
                 parameters : {}
             }
         ]
+            
     }
     else throw new Error('RAI: No problem type was found');
 

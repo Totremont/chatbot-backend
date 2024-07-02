@@ -71,11 +71,15 @@ async function gateway(data : WebhookRequest)
         case Intents.reclamo_ayuda_problema.display:
             response = await raHandler(data);
             break;
+        case Intents.reclamo_ayuda_inutil_affirmative.display:
+            response = await raiHandler(data);
+            break;
+        
         case Intents.reclamo_generar_problema.display:
             response = await rgpHandler(data);
             break;
-        case Intents.reclamo_ayuda_inutil_affirmative.display:
-            response = await raiHandler(data);
+        case Intents.reclamo_generar_ayuda.display:
+            response = await rgpaHandler(data);
             break;
         
         case Intents.reclamo_generar_desc.display:
@@ -614,6 +618,30 @@ async function rgpHandler(data : WebhookRequest)
         else response.fulfillmentMessages = simpleMessage(rgp_messages.success(option));
     }
     else throw new Error('RGP: No problem option was found');
+    return response;
+}
+
+async function rgpaHandler(data : WebhookRequest)
+{
+    const response = {} as WebhookResponse;
+    const session = getSession(data);
+    const params = data.queryResult.outputContexts?.
+    find(it => it.name === Contexts.reclamo_generar_problema(session).name)?.parameters;
+    const problem_num = params?.[Params.reclamo_numero.name] as number;
+    if(problem_num)
+    {
+        response.followupEventInput = 
+        {
+            name : Events.reclamo_generar_ayuda.name,
+            parameters : 
+            {
+                'reclamo-numero' : problem_num
+            },
+            languageCode : 'es'
+        }
+    }
+    else throw new Error('RGPA: No problem number found');
+
     return response;
 }
 

@@ -319,13 +319,11 @@ export const rc_messages =
             text = 'A continuación te muestro los reclamos que he encontrado.\n'
             reclamos.forEach((it,index) => text = text.concat(
 `
-==
+=================
 Reclamo #${index}:
 Tipo de problema : ${it.category}
-Fecha de creación: ${it.expedition.getDay} / ${it.expedition.getMonth} / ${it.expedition.getFullYear}
+Fecha de creación: ${it.expedition.getDay()} / ${it.expedition.getMonth()} / ${it.expedition.getFullYear()}
 Estado actual: ${it.status}
-
-
 `
             ))
         } 

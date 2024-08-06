@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+  <img src="/welcome.png"/>
+</div>
 
-## Getting Started
+# About
+This is a [webhook server](https://cloud.google.com/dialogflow/es/docs/fulfillment-webhook) written with `Next.js` that serves as the backend service of a chatbot made with `DialogFlow`.
+The chatbot works on Telegram and provides client assistant and support from a fictional ISP provider.
 
-First, run the development server:
+The bot can answer client questions and problems by using *static* and *custom or dynamic* responses.
+- **Static responses** are already loaded on the console and used if no conversation-specific data is needed.
+- **Dynamic responses** require [parameters](https://cloud.google.com/dialogflow/es/docs/intents-actions-parameters) provided by the client during a conversation exchange and are handled by the backend server using [Fulfillments](https://cloud.google.com/dialogflow/es/docs/fulfillment-overview). DialogFlow sends a *webhook request* containing the current Intent, active contexts, parameters, etc; and the server sends a response back as a *webhook response*.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+What can the bot do to help users?
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- List the provider's service packs filtered by clients' location.
+- Create custom packs according to clients' needs.
+- Describe an users' current service pack.
+- Register or delete an user using their *user code*.
+- Provide technical and terminology support.
+- Submit users' complaints on the provider's database for an employee to resolve them.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A detail explanation of the agent implementation and some real conversation examples can be found on `/Informe.pdf` (Spanish).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project was made as part of a course on Artificial Intelligence for my undergrad degree on [Ingeniería en Sistemas de Información](https://utn.edu.ar/es/federacion-universitaria-tecnologica/feria-de-carreras/sistemas-de-informacion) (Information Systems Engineering).
